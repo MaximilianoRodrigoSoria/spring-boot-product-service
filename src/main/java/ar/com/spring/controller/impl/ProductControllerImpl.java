@@ -3,6 +3,7 @@ package ar.com.spring.controller.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,15 @@ import ar.com.spring.persistence.service.IProductService;
 @RequestMapping("/product")
 public class ProductControllerImpl implements ProductController{
 
+
 	@Autowired
 	private IProductService proudctoService;
 	
 	private ProudctRepository proudctRepository;
-	
-	
+
+	@Value("${echo.test.message}")
+	private String echoTestMessage;
+
 	@GetMapping("/find-all")
 	public ResponseEntity<List<Product>> findAll()
 		{
@@ -69,9 +73,15 @@ public class ProductControllerImpl implements ProductController{
 	public ResponseEntity<String> delete(@PathVariable Long id) throws Exception
 	{	
 		proudctoService.deleteById(id);
-		return new ResponseEntity<String>("Borrado con exito!!!", HttpStatus.NO_CONTENT);
-	}	
-	
+		return new ResponseEntity<String>("Delete successfully!!!", HttpStatus.NO_CONTENT);
+	}
+
+	@Override
+	@GetMapping("/echo")
+	public String echo() throws Exception {
+		return echoTestMessage.toUpperCase();
+	}
+
 	@Autowired
 	public void setProudctRepository(ProudctRepository proudctRepository)
 		{this.proudctRepository = proudctRepository;}

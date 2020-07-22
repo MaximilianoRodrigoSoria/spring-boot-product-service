@@ -57,5 +57,13 @@ public interface ProductController {
 	})
 	public ResponseEntity<String> delete(@Parameter(description="Id of the product to be delete. Cannot be empty.",
             required=true) Long id) throws Exception;
-	
+
+
+	@ApiResponses(value= {
+			@ApiResponse(responseCode = "200", description = "Test OK"),
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "404", description = "Not Found"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+	})
+	public String echo() throws Exception;
 }
