@@ -2,24 +2,24 @@ package ar.com.spring.persistence.service.impl;
 
 import java.util.List;
 
+import ar.com.spring.persistence.dto.CustomProductDTO;
+import ar.com.spring.persistence.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.spring.persistence.entity.Product;
-import ar.com.spring.persistence.repository.IProductDao;
-import ar.com.spring.persistence.service.IProductService;
+import ar.com.spring.persistence.service.ProductService;
 
 @Service
-public class ProductServiceImpl implements IProductService {
+public class ProductServiceImpl implements ProductService {
 
-	@Autowired
-	private IProductDao productDao; 
-	
+	private ProductRepository productRepository;
+
 	@Override
 	@Transactional(readOnly=true)
 	public List<Product> findAll() {
-		return (List<Product>) productDao.findAll();
+		return (List<Product>) productRepository.findAll();
 	}
 
 	@Override
@@ -27,25 +27,34 @@ public class ProductServiceImpl implements IProductService {
 	public Product findById(Long id) throws Exception {
 		
 		
-		return productDao.findById(id).orElse(new Product());
+		return productRepository.findById(id).orElse(new Product());
 	}
 
 	@Override
 	@Transactional
 	public Product save(Product product) {
 		
-		return productDao.save(product);
+		return productRepository.save(product);
 	}
 
 	@Override
 	@Transactional
 	public void deleteById(Long id) {
-		if(productDao.existsById(id))
+		if(productRepository.existsById(id))
 		{
-			productDao.deleteById(id);
+			productRepository.deleteById(id);
 		}
 		
 	}
-	
+
+	@Override
+	public CustomProductDTO findByIdDTO(Long id) {
+		return productRepository.findByIdDTO(id);
+	}
+
+	@Autowired
+	public void setProductRepository(ProductRepository productRepository){
+		this.productRepository = productRepository;
+	}
 
 }

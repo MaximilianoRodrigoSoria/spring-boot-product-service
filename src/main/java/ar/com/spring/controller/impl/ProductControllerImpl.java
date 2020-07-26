@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.com.spring.controller.ProductController;
 import ar.com.spring.persistence.dto.CustomProductDTO;
 import ar.com.spring.persistence.entity.Product;
-import ar.com.spring.persistence.repository.ProudctRepository;
-import ar.com.spring.persistence.service.IProductService;
+import ar.com.spring.persistence.repository.ProductRepository;
+import ar.com.spring.persistence.service.ProductService;
 
 @RefreshScope
 @RestController
@@ -28,10 +28,9 @@ import ar.com.spring.persistence.service.IProductService;
 public class ProductControllerImpl implements ProductController{
 
 
-	@Autowired
-	private IProductService proudctoService;
-	
-	private ProudctRepository proudctRepository;
+	private ProductService productService;
+
+
 
 	@Value("${echo.test.message}")
 	private String echoTestMessage;
@@ -39,40 +38,40 @@ public class ProductControllerImpl implements ProductController{
 	@GetMapping("/find-all")
 	public ResponseEntity<List<Product>> findAll()
 		{
-		proudctRepository.findByIdDTO(1L);
-		return new ResponseEntity<List<Product>>( proudctoService.findAll(), HttpStatus.OK);}
+		productService.findByIdDTO(1L);
+		return new ResponseEntity<List<Product>>( productService.findAll(), HttpStatus.OK);}
 	
 	
 	@GetMapping("/find-by-id-dto/{id}")
 	public ResponseEntity<CustomProductDTO> findByIdCustomDTO(@PathVariable Long id) throws Exception
 		{
-		return new ResponseEntity<CustomProductDTO>( proudctRepository.findByIdDTO(id), HttpStatus.OK);}
+		return new ResponseEntity<CustomProductDTO>( productService.findByIdDTO(id), HttpStatus.OK);}
 	
 	
 	
 	@GetMapping("/find-by-id/{id}")
 	public ResponseEntity<Product> findById(@PathVariable Long id) throws Exception
-		{return new ResponseEntity<Product>( proudctoService.findById(id), HttpStatus.OK);}
+		{return new ResponseEntity<Product>( productService.findById(id), HttpStatus.OK);}
 
 
 	@PostMapping("/save")
 	public ResponseEntity<Product> save(@RequestBody Product product) throws Exception
-		{return new ResponseEntity<Product>( proudctoService.save(product), HttpStatus.CREATED);}
+		{return new ResponseEntity<Product>( productService.save(product), HttpStatus.CREATED);}
 	
 	
 	@PutMapping("/update/{id}")
 	public ResponseEntity<Product> edit(@RequestBody Product product, @PathVariable Long id) throws Exception
 	{	
-		Product productDb = proudctoService.findById(id);
+		Product productDb = productService.findById(id);
 		productDb.setCretateAt(product.getCretateAt());
 		productDb.setName(product.getName());
 		productDb.setPrice(product.getPrice());
-		return new ResponseEntity<Product>( proudctoService.save(productDb), HttpStatus.OK);}
+		return new ResponseEntity<Product>( productService.save(productDb), HttpStatus.OK);}
 	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) throws Exception
-	{	
-		proudctoService.deleteById(id);
+	{
+		productService.deleteById(id);
 		return new ResponseEntity<String>("Delete successfully!!!", HttpStatus.NO_CONTENT);
 	}
 
@@ -82,7 +81,11 @@ public class ProductControllerImpl implements ProductController{
 		return echoTestMessage.toUpperCase();
 	}
 
+
+
+
 	@Autowired
-	public void setProudctRepository(ProudctRepository proudctRepository)
-		{this.proudctRepository = proudctRepository;}
+	public void setProductService(ProductService productService){
+		this.productService = productService;
+	}
 }
